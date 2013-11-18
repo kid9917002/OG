@@ -50,7 +50,8 @@ def check_output(ofile,pid):
             Max = ofile[tmplist[0]]
         tmplist.pop(0)  #del the first item
     del tmplist
-    print(output)
+    return output
+    //print(output)
 
 def main(a):
     ofile = dict()
@@ -83,7 +84,7 @@ def main(a):
             #p.terminate()
         except:
             p.kill() 
-    check_output(ofile,a[1])
+    output = check_output(ofile,a[1])
 #    print(ofile)
     del ofile
     del exe
