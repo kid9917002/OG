@@ -76,7 +76,8 @@ def main(a):
 #############    p.communicate return (stdout , stderr)   #################
         try:
             std = p.communicate(input = data.encode('utf-8') ,timeout = 10)
-            print(std[0].decode('utf-8','ignore'),std[1].decode('utf-8','ignore'))
+            print(std)
+#            print(std[0].decode('utf-8','ignore'),std[1].decode('utf-8','ignore'))
 #            if o in ofile:
 #                ofile[o] += 1
 #            else :
@@ -92,4 +93,5 @@ def main(a):
 
 if __name__ == "__main__":
     main(sys.argv)
+    print("end")
 
