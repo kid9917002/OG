@@ -56,12 +56,12 @@ def check_output(ofile,pid):
 def main(a):
     ofile = dict()
     data = getdata(a[1])
-    print(data)
+#    print(data)
     exe = get_dir_and_file(problempath+"/DB/",a[1])
     exe.sort()
     for e in exe:
         ename , eext = os.path.splitext(e)
-        print(e)
+#        print(e)
 ############################### process on ################################
         if eext == ".exe":
             p = subprocess.Popen(e, stdin = subprocess.PIPE,stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = True)
@@ -93,5 +93,5 @@ def main(a):
 
 if __name__ == "__main__":
     main(sys.argv)
-    print("end")
+#    print("end")
 
