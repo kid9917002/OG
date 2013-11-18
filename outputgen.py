@@ -56,7 +56,7 @@ def check_output(ofile,pid):
 def main(a):
     ofile = dict()
     data = getdata(a[1])
-#    print(data)
+    print(data)
     exe = get_dir_and_file(problempath+"/DB/",a[1])
     exe.sort()
     for e in exe:
