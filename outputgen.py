@@ -39,7 +39,7 @@ def get_dir_and_file(path,id):
 def check_output(ofile,pid):
     Max = 0
     tmplist = list()
-#    output = ""
+    output = ""
     for k in ofile.keys():
 #        print("key:",k,"value:",ofile[k])
         tmplist.append(k)
