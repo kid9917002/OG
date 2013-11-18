@@ -76,17 +76,17 @@ def main(a):
 #############    p.communicate return (stdout , stderr)   #################
         try:
             std = p.communicate(input = data.encode('utf-8') )
-            print(std)
-#            print(std[0].decode('utf-8','ignore'),std[1].decode('utf-8','ignore'))
-#            if o in ofile:
-#                ofile[o] += 1
-#            else :
-#                ofile[o] = 1
+#            print(std)
+            o = std[0].decode('utf-8','ignore')
+            if o in ofile:
+                ofile[o] += 1
+            else :
+                ofile[o] = 1
             #p.terminate()
         except:
             p.kill() 
-#    output = check_output(ofile,a[1])
-#    print(output)
+    output = check_output(ofile,a[1])
+    print(output)
 #    print(ofile)
     del ofile
     del exe
