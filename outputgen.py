@@ -64,7 +64,7 @@ def main(a):
         print(e)
 ############################### process on ################################
         if eext == ".exe":
-            p = subprocess.Popen(e, stdin = subprocess.PIPE,stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = True)
+            p = subprocess.Popen(e, stdin = subprocess.PIPE,stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = False)
         else:
             javafile = open(shellpath+"exejava.sh","w")
             javafile.write(cmdproglue)
