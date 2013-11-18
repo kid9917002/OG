@@ -75,6 +75,7 @@ def main(a):
         try:
             std = p.communicate(input = data.encode('utf-8') ,timeout = 10)
             o =std[0].decode('utf-8','ignore')
+            print(std[1])
             if o in ofile:
                 ofile[o] += 1
             else :
