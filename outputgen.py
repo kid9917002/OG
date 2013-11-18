@@ -75,7 +75,7 @@ def main(a):
 ####################### process end and get output ########################
 #############    p.communicate return (stdout , stderr)   #################
         try:
-            std = p.communicate(input = data.encode('utf-8') ,timeout = 10)
+            std = p.communicate(input = data.encode('utf-8') )
             print(std)
 #            print(std[0].decode('utf-8','ignore'),std[1].decode('utf-8','ignore'))
 #            if o in ofile:
