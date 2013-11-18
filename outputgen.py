@@ -51,7 +51,7 @@ def check_output(ofile,pid):
         tmplist.pop(0)  #del the first item
     del tmplist
     return output
-    //print(output)
+    #print(output)
 
 def main(a):
     ofile = dict()
