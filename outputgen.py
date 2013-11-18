@@ -85,6 +85,7 @@ def main(a):
         except:
             p.kill() 
     output = check_output(ofile,a[1])
+    print(output)
 #    print(ofile)
     del ofile
     del exe
