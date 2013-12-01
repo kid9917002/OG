@@ -1,11 +1,13 @@
 import subprocess,os,sys,stat
 from globalvar import *
+from multiprocessing import Pool, Manager
+import time
 # coding=utf8
 
 
 def getdata(number):
     datastream = ""
-    f = open(problempath+"/file/"+str(number)+".in","r")
+    f = open(cDDB+str(number)+"_input.txt","r")
     for line in f:
         datastream += line
     f.close()
@@ -41,7 +43,7 @@ def check_output(ofile,pid):
     tmplist = list()
     output = ""
     for k in ofile.keys():
-#        print("key:",k,"value:",ofile[k])
+        #print("key:",k,"value:",ofile[k])
         tmplist.append(k)
     tmplist.sort()
     while tmplist:
@@ -50,48 +52,68 @@ def check_output(ofile,pid):
             Max = ofile[tmplist[0]]
         tmplist.pop(0)  #del the first item
     del tmplist
-    return output
-    #print(output)
+    print(output,end='')
 
-def main(a):
-    ofile = dict()
-    data = getdata(a[1])
-#    print(data)
-    exe = get_dir_and_file(problempath+"/DB/",a[1])
-    exe.sort()
-    for e in exe:
-        ename , eext = os.path.splitext(e)
-#        print(e)
+def multiproc(e,idata,pid,ofile,rm):
+    #print("thread start %s" % e)
+    time.sleep(0.1)
+    ename , eext = os.path.splitext(e)
 ############################### process on ################################
-        if eext == ".exe":
-            p = subprocess.Popen(e, stdin = subprocess.PIPE,stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = True)
-        else:
-            javafile = open(shellpath+"exejava.sh","w")
-            javafile.write(cmdproglue)
-            javafile.write("cd "+problempath+"/DB/"+a[1]+"\n")
-            javafile.write("java "+ e + "\n")
-            javafile.close()
-            p = subprocess.Popen(["sh",shellpath+"exejava.sh"], stdin = subprocess.PIPE,stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = False)
+    if eext == ".exe":
+        p = subprocess.Popen(e, stdin = subprocess.PIPE,stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = True)
+    else:
+        javafile = open(shellpath+"exejava_"+e+".sh","w")
+        javafile.write(cmdproglue)
+        javafile.write("cd "+problempath+"/DB/"+pid+"\n")
+        javafile.write("java "+ e + "\n")
+        javafile.close()
+        p = subprocess.Popen(["sh",shellpath+"exejava_"+e+".sh"], stdin = subprocess.PIPE,stdout = subprocess.PIPE, stderr = subprocess.PIPE, shell = False)
 ####################### process end and get output ########################
 #############    p.communicate return (stdout , stderr)   #################
-        try:
-            std = p.communicate(input = data.encode('utf-8') )
-#            print(std)
-            o = std[0].decode('utf-8','ignore')
+    try:
+        std = p.communicate(input = idata.encode('utf-8') ,timeout=10)
+        o =std[0].decode('utf-8','ignore')
+#        print(e," : ",o)
+        if o:
             if o in ofile:
                 ofile[o] += 1
             else :
                 ofile[o] = 1
-            #p.terminate()
-        except:
-            p.kill() 
-    output = check_output(ofile,a[1])
-    print(output)
+    except:
+        #print("Timeout!!")
+        rm.append(e)
+        sys.stdout.flush()
+        p.kill()
+    #print("thread end %s" % e)
+    #print(ofile)
+
+def main(a):
+    data = getdata(a[1])
+#    print(data)
+    exe = get_dir_and_file(problempath+"/DB/",a[1])
+    manager = Manager() # can share memory
+    ofile = manager.dict()
+    removeable = manager.list()
+    pool = Pool(processes=16)
+    exe.sort()
+    for e in exe:
+        pool.apply_async(multiproc, (e,data,a[1],ofile,removeable,))
+    pool.close()
+    pool.join()
 #    print(ofile)
-    del ofile
-    del exe
+    check_output(ofile,sys.argv[1])
+    return removeable,exe
+
+############# kill and remove all executing programs #############
+def killing(rmf,kill,pid):
+    for r in rmf:
+        os.system("rm -rf "+r)
+    for e in kill:
+        os.system("pkill -9 -f "+e)
 
 if __name__ == "__main__":
-    main(sys.argv)
-#    print("end")
+    removeable,killedexe = main(sys.argv)
+    killing(removeable,killedexe,sys.argv[1])
+    #print("ME END")
+    
 
